@@ -1,16 +1,22 @@
 {
-  "name": "backend-motomax",
-  "version": "1.0.0",
-  "description": "Backend REST service for motomax",
-  "main": "server/server.js",
-  "scripts": {
-    "start": "node server/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Maximo Miranda",
-  "license": "ISC",
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1"
-  }
+    "name": "backend-motomax",
+    "version": "1.0.0",
+    "description": "Backend REST service for motomax",
+    "main": "main.js",
+    "engines": {
+        "node": "12.6.0"
+    },
+    "scripts": {
+        "start": "node main.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Maximo Miranda",
+    "license": "ISC",
+    "dependencies": {
+        "bcrypt": "^3.0.6",
+        "body-parser": "^1.19.0",
+        "express": "^4.17.1",
+        "mongoose": "^5.6.10",
+        "mongoose-unique-validator": "^2.0.3"
+    }
 }
