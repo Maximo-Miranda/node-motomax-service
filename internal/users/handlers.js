@@ -106,6 +106,14 @@ function UpdateHandler(r, w) {
             })
         }
 
+        if (!userDB) {
+            return w.status(404).json({
+                error: true,
+                data: null,
+                message: 'User not found'
+            })
+        }
+
         return w.status(200).json({
             error: false,
             data: userDB,
@@ -163,6 +171,14 @@ function SoftDeleteHandler(r, w) {
                 error: true,
                 data: null,
                 message: err
+            })
+        }
+
+        if (!userDB) {
+            return w.status(404).json({
+                error: true,
+                data: null,
+                message: 'User not found'
             })
         }
 

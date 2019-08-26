@@ -14,7 +14,7 @@ UserRoutes.post('/login', handlers.LoginHandler)
 UserRoutes.get('/users', [auth, role(['ROOT', 'ADMINISTRATOR'])], handlers.IndexHandler)
 
 // Create user route
-UserRoutes.post('/users', handlers.StoreHandler)
+UserRoutes.post('/users', [auth, role(['ROOT', 'ADMINISTRATOR'])], handlers.StoreHandler)
 
 // Update user route
 UserRoutes.put('/users/:id', [auth, role(['ROOT', 'ADMINISTRATOR'])], handlers.UpdateHandler)
