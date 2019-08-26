@@ -1,7 +1,12 @@
+// node_modules requires
 const Model = require('./users')
 const bcrypt = require('bcrypt')
 const _ = require('underscore')
+const jwt = require('jsonwebtoken')
+
+// Internal requieres
 const cons = require('../../utils/constants')
+
 
 // IndexHandler ...
 function IndexHandler(r, w) {
@@ -111,6 +116,7 @@ function UpdateHandler(r, w) {
 
 }
 
+// DeleteHandler ...
 function DeleteHandler(r, w) {
 
     let id = r.params.id
@@ -143,6 +149,7 @@ function DeleteHandler(r, w) {
 
 }
 
+// SoftDeleteHandler ...
 function SoftDeleteHandler(r, w) {
 
     let id = r.params.id
@@ -169,10 +176,59 @@ function SoftDeleteHandler(r, w) {
 
 }
 
+// LoginHandler ...
+function LoginHandler(r, w) {
+
+    let req = r.body
+
+    Model.findOne({ identification: req.identification }, (err, userDB) => {
+
+        if (err) {
+            return w.status(500).json({
+                error: true,
+                data: null,
+                message: err
+            })
+        }
+
+        if (!userDB) {
+            return w.status(400).json({
+                error: true,
+                data: null,
+                message: 'Invalid identification or password'
+            })
+        }
+
+        if (!bcrypt.compareSync(req.password, userDB.password)) {
+            return w.status(400).json({
+                error: true,
+                data: null,
+                message: 'Invalid identification or password'
+            })
+        }
+
+        let claims = _.pick(userDB, ['_id', 'name', 'lastname', 'img', 'nacionality', 'identification', 'role'])
+
+        let token = jwt.sign(claims, process.env.APP_SECRET_KEY, { expiresIn: process.env.JWT_EXDATE });
+
+        return w.status(200).json({
+            error: false,
+            data: {
+                user: claims,
+                token,
+            },
+            message: 'Login successfull'
+        })
+
+    })
+
+}
+
 module.exports = {
     StoreHandler,
     UpdateHandler,
     IndexHandler,
     DeleteHandler,
-    SoftDeleteHandler
+    SoftDeleteHandler,
+    LoginHandler,
 }
