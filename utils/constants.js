@@ -2,6 +2,7 @@ const typeIdentifications = {
     values: [
         "CEDULA",
         "PASSPORT",
+        "EMAIL"
     ],
     message: '{VALUE} not is a valid identification'
 }

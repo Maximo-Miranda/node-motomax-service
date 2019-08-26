@@ -12,3 +12,6 @@ process.env.JWT_EXDATE = 60 * 60 * 24 * 30
 
 // APP secret Key
 process.env.APP_SECRET_KEY = process.env.APP_SECRET_KEY || 'app-secret-key'
+
+// Google Client ID
+process.env.GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '596345693666-blgoi0uhgd1likr43in28uuhbl11aufk.apps.googleusercontent.com'

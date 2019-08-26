@@ -3,6 +3,8 @@ const Model = require('./users')
 const bcrypt = require('bcrypt')
 const _ = require('underscore')
 const jwt = require('jsonwebtoken')
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Internal requieres
 const cons = require('../../utils/constants')
@@ -90,7 +92,7 @@ function StoreHandler(r, w) {
 // UpdateHandler ...
 function UpdateHandler(r, w) {
 
-    let req = _.pick(r.body, ['name', 'lastname', 'role', 'img', 'nacionality', 'identification', 'type_identification', 'phonenumber', 'status'])
+    let req = _.pick(r.body, ['name', 'lastname', 'role', 'img', 'nacionality', 'identification', 'type_identification', 'phonenumber', 'status', 'google'])
 
     let id = r.params.id
 
@@ -215,6 +217,14 @@ function LoginHandler(r, w) {
             })
         }
 
+        if (userDB.google) {
+            return w.status(400).json({
+                error: true,
+                data: null,
+                message: 'The account was registered using google signIn'
+            })
+        }
+
         if (!bcrypt.compareSync(req.password, userDB.password)) {
             return w.status(400).json({
                 error: true,
@@ -240,6 +250,109 @@ function LoginHandler(r, w) {
 
 }
 
+// LoginGoogleHandler ...
+async function LoginGoogleHandler(r, w) {
+
+    const googleToken = r.body.idtoken
+
+    let result = await verify(googleToken).catch(e => {
+
+        return w.status(403).json({
+            error: true,
+            data: null,
+            message: e
+        })
+
+    })
+
+    Model.findOne({ identification: result.identification }, async(err, userDB) => {
+
+        if (err) {
+            return w.status(500).json({
+                error: true,
+                data: null,
+                message: err
+            })
+        }
+
+        if (!userDB) {
+
+            try {
+
+                let r = Math.random().toString(36).substring(7);
+
+                let user = new Model({
+                    name: result.name,
+                    lastname: result.latname,
+                    password: bcrypt.hashSync(r, 10),
+                    role: cons.roles.values[2],
+                    img: result.img,
+                    nacionality: 'Indeterminate',
+                    identification: result.identification,
+                    type_identification: cons.typeIdentifications.values[2],
+                    phonenumber: '0',
+                    status: cons.status.values[0],
+                    google: true,
+                })
+
+                userDB = await user.save()
+
+            } catch (err) {
+
+                return w.status(500).json({
+                    error: true,
+                    data: null,
+                    message: err
+                })
+
+            }
+
+        }
+
+        if (!userDB.google) {
+            return w.status(400).json({
+                error: true,
+                data: null,
+                message: 'Login with google signIn failed, the account was register on normaly authentication'
+            })
+        }
+
+        let claims = _.pick(userDB, ['_id', 'name', 'lastname', 'img', 'nacionality', 'identification', 'role'])
+
+        let token = jwt.sign(claims, process.env.APP_SECRET_KEY, { expiresIn: process.env.JWT_EXDATE });
+
+        return w.status(200).json({
+            error: false,
+            data: {
+                user: claims,
+                token,
+            },
+            message: 'Login google successfull'
+        })
+
+    })
+
+}
+
+// verify ...
+async function verify(token) {
+
+    const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+
+    return {
+        name: payload.given_name,
+        latname: payload.family_name,
+        identification: payload.email,
+        img: payload.picture,
+    }
+    // If request specified a G Suite domain:
+    //const domain = payload['hd'];
+}
+
 module.exports = {
     StoreHandler,
     UpdateHandler,
@@ -247,4 +360,5 @@ module.exports = {
     DeleteHandler,
     SoftDeleteHandler,
     LoginHandler,
+    LoginGoogleHandler
 }

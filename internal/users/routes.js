@@ -10,6 +10,9 @@ const role = require('../middlewares/permisson')
 // Login route
 UserRoutes.post('/login', handlers.LoginHandler)
 
+// Login Google
+UserRoutes.post('/login/google', handlers.LoginGoogleHandler)
+
 // Get users route
 UserRoutes.get('/users', [auth, role(['ROOT', 'ADMINISTRATOR'])], handlers.IndexHandler)
 

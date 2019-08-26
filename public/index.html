@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Motomax APIRest</title>
+
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<meta name="google-signin-client_id" content="596345693666-blgoi0uhgd1likr43in28uuhbl11aufk.apps.googleusercontent.com">
+</head>
+
+<body>
+    <div>
+        <h1>Motomax APIRest</h1>
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        <a href="#" onclick="signOut();">Sign out</a>
+    </div>
+
+ 
+
+    
+    <script>
+
+    function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+        console.log('User signed out.');
+        });
+    }
+    
+    function onSignIn(googleUser) {
+
+        var id_token = googleUser.getAuthResponse().id_token;
+        
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/login/google');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+            console.log('Signed in as: ' + xhr.responseText);
+        };
+        xhr.send('idtoken=' + id_token);
+
+    }
+
+    </script>
+
+</body>
+
+</html>

@@ -44,6 +44,10 @@ let userSchema = new Schema({
         type: String,
         required: [true, 'The phonenumber is required']
     },
+    google: {
+        type: Boolean,
+        default: false,
+    },
     status: {
         type: String,
         default: cons.status.values[0],
