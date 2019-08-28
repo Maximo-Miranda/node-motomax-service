@@ -1,11 +1,14 @@
 // Requires
 const express = require('express')
+const fileUpload = require('express-fileupload')
 const bodyParser = require('body-parser')
 require('./config/config')
 require('./utils/db')
 
 // Init express instance
 const app = express()
+
+app.use(fileUpload())
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -18,4 +21,3 @@ app.use(require('./router/router'))
 
 // Start app
 app.listen(process.env.PORT, () => console.log(`Motomax REST server running on port: ${process.env.PORT}`))
-

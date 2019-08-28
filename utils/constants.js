@@ -37,10 +37,19 @@ const typePaymentCollection = {
     message: '{VALUE} not is a valid type of payment collection'
 }
 
+const typeMaintenances = {
+    values: [
+        "CORRECTIVE",
+        "PREVENTIVE",
+        "SUSTENANCE"
+    ],
+    message: '{VALUE} not is a valid type of payment collection'
+}
 
 module.exports = {
     typeIdentifications,
     roles,
     status,
     typePaymentCollection,
+    typeMaintenances,
 }
