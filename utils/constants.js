@@ -28,8 +28,19 @@ const status = {
     message: '{VALUE} not is a valid status'
 }
 
+const typePaymentCollection = {
+    values: [
+        "PAYMENT",
+        "DEBT",
+        "ADVENCEMENT"
+    ],
+    message: '{VALUE} not is a valid type of payment collection'
+}
+
+
 module.exports = {
     typeIdentifications,
     roles,
     status,
+    typePaymentCollection,
 }

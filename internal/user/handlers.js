@@ -1,5 +1,5 @@
 // node_modules requires
-const Model = require('./users')
+const Model = require('./user')
 const bcrypt = require('bcrypt')
 const _ = require('underscore')
 const jwt = require('jsonwebtoken')
@@ -51,6 +51,39 @@ function IndexHandler(r, w) {
             })
 
         })
+
+}
+
+// GetByIDHandler ...
+async function GetByIDHandler(r, w) {
+
+    try {
+
+        const id = r.params.id
+
+        let userDB = await Model.findById(id)
+
+        if (!userDB) {
+            return w.status(404).json({
+                error: true,
+                data: null,
+                message: 'User not found'
+            })
+        }
+
+        return w.status(200).json({
+            error: false,
+            data: userDB,
+            message: 'Get user successfull'
+        })
+
+    } catch (err) {
+        return w.status(500).json({
+            error: true,
+            data: null,
+            message: err
+        })
+    }
 
 }
 
@@ -360,5 +393,6 @@ module.exports = {
     DeleteHandler,
     SoftDeleteHandler,
     LoginHandler,
-    LoginGoogleHandler
+    LoginGoogleHandler,
+    GetByIDHandler,
 }

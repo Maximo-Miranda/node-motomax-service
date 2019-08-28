@@ -16,6 +16,9 @@ UserRoutes.post('/login/google', handlers.LoginGoogleHandler)
 // Get users route
 UserRoutes.get('/users', [auth, role(['ROOT', 'ADMINISTRATOR'])], handlers.IndexHandler)
 
+// Get user route
+UserRoutes.get('/user/:id', [auth, role(['ROOT', 'ADMINISTRATOR'])], handlers.GetByIDHandler)
+
 // Create user route
 UserRoutes.post('/users', [auth, role(['ROOT', 'ADMINISTRATOR'])], handlers.StoreHandler)
 
