@@ -2,11 +2,15 @@
 const express = require('express')
 const fileUpload = require('express-fileupload')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 require('./config/config')
 require('./utils/db')
 
 // Init express instance
 const app = express()
+
+// Enable cors
+app.use(cors())
 
 app.use(fileUpload())
 

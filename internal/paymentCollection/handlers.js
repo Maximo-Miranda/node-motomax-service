@@ -4,6 +4,7 @@ const uuidv4 = require('uuid/v4');
 
 // Internal requieres
 const Model = require('./paymentCollection')
+const paymentModel = require('../payment/payments')
 const cons = require('../../utils/constants')
 
 // IndexHandler ...
@@ -232,6 +233,7 @@ function SoftDeleteHandler(r, w) {
 
 }
 
+// GetPaymentCollectionID ...
 function GetPaymentCollectionID(r, w) {
 
     return w.status(200).json({
@@ -243,6 +245,37 @@ function GetPaymentCollectionID(r, w) {
     })
 }
 
+// CreatePaymentHandler ...
+async function CreatePaymentHandler(r, w) {
+
+    try {
+
+        const req = r.body
+
+        const payment = new paymentModel({
+            payment_collection: req.payment_collection_id,
+            value: req.value,
+            motorcycle: req.motorcycle_id
+        })
+
+        let paymentDB = await payment.save()
+
+        return w.json({
+            error: false,
+            data: paymentDB,
+            message: 'Payment created successfull'
+        })
+
+    } catch (err) {
+        return w.json({
+            error: true,
+            data: null,
+            message: err.message
+        })
+    }
+
+}
+
 module.exports = {
     StoreHandler,
     IndexHandler,
@@ -251,4 +284,5 @@ module.exports = {
     SoftDeleteHandler,
     GetPaymentCollectionID,
     GetByIDHandler,
+    CreatePaymentHandler,
 }

@@ -28,5 +28,8 @@ PaymentCollectionRoutes.delete('/payments/collections/soft/:id', [auth, role(['R
 // Get /payments/collections/getid route
 PaymentCollectionRoutes.get('/payments/collections/getid', [auth, role(['ROOT', 'ADMINISTRATOR', 'DRIVER'])], handlers.GetPaymentCollectionID)
 
+// Post /payments/authorize
+PaymentCollectionRoutes.post('/payments/authorize', [auth, role(['ROOT'])], handlers.CreatePaymentHandler)
+
 
 module.exports = PaymentCollectionRoutes
