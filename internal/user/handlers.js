@@ -164,6 +164,8 @@ function DeleteHandler(r, w) {
 
     let id = r.params.id
 
+    console.log('LOG internal/users/handlers@DeleteHandler', id);
+
     Model.findByIdAndRemove(id, (err, userDeletesDB) => {
 
         if (err) {
@@ -386,6 +388,39 @@ async function verify(token) {
     //const domain = payload['hd'];
 }
 
+// ValidateUniqueIdentificationHandler ...
+async function ValidateUniqueIdentificationHandler(r, w) {
+
+    try {
+
+        const req = r.body
+
+        let userDB = await Model.findOne({ identification: req.identification })
+
+        if (!userDB) {
+            return w.status(200).json({
+                error: false,
+                data: null,
+                message: 'User not found'
+            })
+        }
+
+        return w.status(200).json({
+            error: false,
+            data: userDB,
+            message: 'User found'
+        })
+
+    } catch (err) {
+        return w.status(500).json({
+            error: true,
+            data: null,
+            message: err
+        })
+    }
+
+}
+
 module.exports = {
     StoreHandler,
     UpdateHandler,
@@ -395,4 +430,5 @@ module.exports = {
     LoginHandler,
     LoginGoogleHandler,
     GetByIDHandler,
+    ValidateUniqueIdentificationHandler,
 }

@@ -31,4 +31,7 @@ UserRoutes.delete('/users/:id', [auth, role(['ROOT'])], handlers.DeleteHandler)
 // Softdelete user route
 UserRoutes.delete('/users/soft/:id', [auth, role(['ROOT'])], handlers.SoftDeleteHandler)
 
+// Validate identification user route
+UserRoutes.post('/users/validate/identification', [auth, role(['ROOT'])], handlers.ValidateUniqueIdentificationHandler)
+
 module.exports = UserRoutes
