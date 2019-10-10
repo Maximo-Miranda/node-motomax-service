@@ -64,10 +64,12 @@ function StoreHandler(r, w) {
         brand: req.brand,
         model: req.model,
         color: req.color,
-        license_plate: req.license_plate,
+        license_plate: String(req.license_plate).toUpperCase(),
         price: req.price,
         date_of_purchase: req.date_of_purchase,
     })
+
+    console.log('LOG internal/motorcycles/handlers@StoreHandler', req);
 
     motorcycle.save((err, motorcycleDB) => {
 
@@ -124,6 +126,8 @@ async function GetByIDHandler(r, w) {
 function UpdateHandler(r, w) {
 
     let req = _.pick(r.body, ['brand', 'model', 'color', 'license_plate', 'price', 'date_of_purchase', 'status'])
+
+    req.license_plate = String(req.license_plate).toUpperCase()
 
     let id = r.params.id
 
@@ -225,6 +229,39 @@ function SoftDeleteHandler(r, w) {
 
 }
 
+// ValidateUniqueIdentificationHandler ...
+async function ValidateUniqueLicensePlateHandler(r, w) {
+
+    try {
+
+        const req = r.body
+
+        let motorcycleDB = await Model.findOne({ license_plate: String(req.license_plate).toUpperCase() })
+
+        if (!motorcycleDB) {
+            return w.status(200).json({
+                error: false,
+                data: null,
+                message: 'Motorcycle not found'
+            })
+        }
+
+        return w.status(200).json({
+            error: false,
+            data: motorcycleDB,
+            message: 'Motorcycle found'
+        })
+
+    } catch (err) {
+        return w.status(500).json({
+            error: true,
+            data: null,
+            message: err
+        })
+    }
+
+}
+
 module.exports = {
     StoreHandler,
     IndexHandler,
@@ -232,4 +269,5 @@ module.exports = {
     DeleteHandler,
     SoftDeleteHandler,
     GetByIDHandler,
+    ValidateUniqueLicensePlateHandler,
 }

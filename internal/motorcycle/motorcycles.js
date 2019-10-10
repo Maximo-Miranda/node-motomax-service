@@ -13,7 +13,7 @@ let motorcycleSchema = new Schema({
         required: [true, "The brand is required"]
     },
     model: {
-        type: Number,
+        type: String,
         required: [true, "The model is required"]
     },
     color: {
@@ -40,7 +40,7 @@ let motorcycleSchema = new Schema({
     },
     date: {
         type: String,
-        default: moment().format("L")
+        default: moment().format("YYYY-MM-DD")
     }
 });
 

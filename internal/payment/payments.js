@@ -9,19 +9,9 @@ let Schema = mongoose.Schema;
 
 let paymentsSchema = new Schema({
 
-    payment_collection: {
-        type: Schema.Types.ObjectId,
-        ref: 'payments_collections',
-        required: [true, "The payment collection id is required"]
-    },
-    value: {
-        type: Number,
-        required: [true, "The value is required"]
-    },
-    motorcycle: {
-        type: Schema.Types.ObjectId,
-        ref: 'motorcycles',
-        required: [true, "The motorcycle id is required"]
+    title: {
+        type: String,
+        required: [true, "The title is required"]
     },
     status: {
         type: String,

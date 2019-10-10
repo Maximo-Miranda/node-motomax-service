@@ -25,5 +25,8 @@ MotorcycleRoutes.delete('/motorcycles/:id', [auth, role(['ROOT'])], handlers.Del
 // Softdelete motorcycle route
 MotorcycleRoutes.delete('/motorcycles/soft/:id', [auth, role(['ROOT'])], handlers.SoftDeleteHandler)
 
+// Validate unique license plate route
+MotorcycleRoutes.post('/motorcycles/validate/licenseplate', [auth, role(['ROOT'])], handlers.ValidateUniqueLicensePlateHandler)
+
 
 module.exports = MotorcycleRoutes

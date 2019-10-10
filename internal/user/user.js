@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 const cons = require('../../utils/constants')
+const moment = require("moment");
 
 let Schema = mongoose.Schema
 
@@ -52,6 +53,10 @@ let userSchema = new Schema({
         type: String,
         default: cons.status.values[0],
         enum: cons.status,
+    },
+    date: {
+        type: String,
+        default: moment().format("YYYY-MM-DD")
     }
 
 })

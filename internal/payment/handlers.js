@@ -64,9 +64,8 @@ function StoreHandler(r, w) {
     //TODO: Add console logs
 
     let motorcycle = new Model({
-        payment_collection: req.payment_collection_id,
-        value: req.value,
-        motorcycle: req.motorcycle_id,
+        title: req.title,
+        status: req.status,
     })
 
     motorcycle.save((err, paymentDB) => {
@@ -94,7 +93,7 @@ async function GetByIDHandler(r, w) {
 
         const id = r.params.id
 
-        let paymentDB = await Model.findById(id).populate('payment_collection').populate('motorcycle')
+        let paymentDB = await Model.findById(id)
 
         if (!paymentDB) {
             return w.status(404).json({
@@ -123,7 +122,7 @@ async function GetByIDHandler(r, w) {
 // UpdateHandler ...
 function UpdateHandler(r, w) {
 
-    let req = _.pick(r.body, ['payment_collection_id', 'payment_collection_uid', 'value', 'motorcycle_id', 'status'])
+    let req = _.pick(r.body, ['title', 'status'])
 
     let id = r.params.id
 

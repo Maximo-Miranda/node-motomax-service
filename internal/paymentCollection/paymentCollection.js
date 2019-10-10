@@ -18,8 +18,14 @@ let paymentsCollectionsSchema = new Schema({
         ref: 'users',
         required: [true, "The user id is required"]
     },
+    payment: {
+      type: Schema.Types.ObjectId,
+        ref: 'payments',
+        required: [true, "The payment id is required"],
+    },
     observation: {
-        type: String
+        type: String,
+        required: [true, "The observation id is required"]
     },
     value: {
         type: Number,
@@ -37,7 +43,7 @@ let paymentsCollectionsSchema = new Schema({
     },
     date: {
         type: String,
-        default: moment().format("L")
+        default: moment().format("YYYY-MM-DD")
     }
 });
 

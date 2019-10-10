@@ -23,7 +23,11 @@ const status = {
         "INACTIVO",
         "MAINTENANCE",
         "OPERATING",
-        "DELETED"
+        "DELETED",
+        "FINISHED",
+        "PAYMENT_OPEN",
+        "PAYMENT_CLOSE",
+        "PENDING_PAYMENTS",
     ],
     message: '{VALUE} not is a valid status'
 }

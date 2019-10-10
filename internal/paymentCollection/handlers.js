@@ -67,11 +67,14 @@ function StoreHandler(r, w) {
 
     let motorcycle = new Model({
         motorcycle: req.motorcycle_id,
+        payment: req.payment_id,
         user: r.claims._id,
         observation: req.observation,
         value: req.value,
         type_payment_collection: req.type_payment_collection,
     })
+
+    console.log('LOG internal/motorcycles/handlers@StoreHandler', req);
 
     motorcycle.save((err, paymentCollectionDB) => {
 
