@@ -25,6 +25,12 @@ const status = {
         "OPERATING",
         "DELETED",
         "FINISHED",
+    ],
+    message: '{VALUE} not is a valid status'
+}
+
+const pymentStatus = {
+    values: [
         "PAYMENT_OPEN",
         "PAYMENT_CLOSE",
         "PENDING_PAYMENTS",
@@ -56,4 +62,5 @@ module.exports = {
     status,
     typePaymentCollection,
     typeMaintenances,
+    pymentStatus
 }

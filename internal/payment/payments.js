@@ -13,6 +13,11 @@ let paymentsSchema = new Schema({
         type: String,
         required: [true, "The title is required"]
     },
+    payment_status:{
+        type: String,
+        default: cons.pymentStatus.values[0],
+        enum: cons.pymentStatus
+    },
     status: {
         type: String,
         default: cons.status.values[0],
