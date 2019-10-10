@@ -385,6 +385,8 @@ async function verify(token) {
         img: payload.picture,
     }
 
+
+
     // If request specified a G Suite domain:
     //const domain = payload['hd'];
 }
