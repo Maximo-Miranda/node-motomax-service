@@ -2,8 +2,28 @@
 const express = require('express')
 const router = express()
 const path = require('path')
+const fs = require('fs')
 
 router.get('/', express.static(path.resolve(__dirname + '/../public')))
+router.get('/storage/:type/:name', viewFile)
+
+// viewFile
+function viewFile(r, w) {
+
+    const pathFile = path.resolve(__dirname, `../storage/${r.params.type}/${r.params.name}`)
+
+    if( fs.existsSync(pathFile) ){
+
+        w.sendFile(pathFile)
+
+    } else {
+
+        const fileNotFound = path.resolve(__dirname, '../public/no-image.jpg')
+
+        w.sendFile(fileNotFound)
+
+    }
+}
 
 // Internal requieres
 const userRoutes = require('../internal/user/routes')

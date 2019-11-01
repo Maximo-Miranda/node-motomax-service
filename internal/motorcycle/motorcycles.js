@@ -38,6 +38,10 @@ let motorcycleSchema = new Schema({
         default: cons.status.values[0],
         enum: cons.status
     },
+    url_photo:{
+        type: String,
+        default: 'storage/no-image'
+    },
     date: {
         type: String,
         default: moment().format("YYYY-MM-DD")

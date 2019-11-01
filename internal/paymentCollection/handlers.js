@@ -7,6 +7,9 @@ const Model = require('./paymentCollection')
 const paymentModel = require('../payment/payments')
 const cons = require('../../utils/constants')
 
+const moment = require("moment");
+
+
 // IndexHandler ...
 function IndexHandler(r, w) {
 
@@ -20,6 +23,63 @@ function IndexHandler(r, w) {
 
     let filter = {
         status: cons.status.values[0]
+    }
+
+    Model.find(filter)
+        .skip(from)
+        .limit(limit)
+        .exec((err, paymentCollections) => {
+
+            if (err) {
+                return w.status(500).json({
+                    error: true,
+                    data: null,
+                    message: err
+                })
+            }
+
+            Model.countDocuments(filter, (err, quantity) => {
+
+                if (err) {
+                    return w.status(500).json({
+                        error: true,
+                        data: null,
+                        message: err
+                    })
+                }
+
+                return w.status(200).json({
+                    error: false,
+                    data: {
+                        total: quantity,
+                        payment_collections: paymentCollections
+                    },
+                    message: 'Get payment collections successfull'
+                })
+            })
+
+        })
+}
+
+// QueryHandler
+function QueryHandler(r, w) {
+
+    //TODO: Add console logs
+
+    let from = r.query.from || 0
+    from = Number(from)
+
+    let limit = r.query.limit || 5
+    limit = Number(limit)
+
+    let req = r.body
+
+    let filter = {
+        status: cons.status.values[0],
+        date: {
+            $gte: moment(req.date_from).format("YYYY-MM-DD"),
+            $lt: moment(req.date_end).format("YYYY-MM-DD")
+        }
     }
 
     Model.find(filter)
@@ -101,7 +161,7 @@ async function GetByIDHandler(r, w) {
 
         const id = r.params.id
 
-        let paymentCollectionDB = await Model.findById(id).populate('motorcycle').populate('user')
+        let paymentCollectionDB = await Model.findById(id)
 
         if (!paymentCollectionDB) {
             return w.status(404).json({
@@ -288,4 +348,5 @@ module.exports = {
     GetPaymentCollectionID,
     GetByIDHandler,
     CreatePaymentHandler,
+    QueryHandler,
 }

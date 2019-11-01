@@ -11,6 +11,8 @@ function IndexHandler(r, w) {
 
     //TODO: Add console logs
 
+    console.log('LOG internal/maintenances/handlers@IndexHandler', r.query);
+
     let from = r.query.from || 0
     from = Number(from)
 
@@ -22,6 +24,8 @@ function IndexHandler(r, w) {
     }
 
     Model.find(filter)
+        .populate('user')
+        .populate('motorcycle')
         .skip(from)
         .limit(limit)
         .exec((err, maintenances) => {
@@ -105,6 +109,7 @@ async function StoreHandler(r, w) {
             value: req.value,
             description: req.description,
             type_maintenance: req.type_maintenance,
+            url_photo: req.url_photo,
         })
 
         if (r.files) {
@@ -114,6 +119,12 @@ async function StoreHandler(r, w) {
             let uploadResult = await fileManager.UploadFile(pathUrl, r.files.photos, ['png', 'jpg', 'gif', 'jpeg'])
 
             maintenance.photos = uploadResult
+
+        } else {
+
+            let photo = []
+            photo.push('storage/no/image')
+            maintenance.photos = photo
 
         }
 
@@ -139,7 +150,7 @@ async function UpdateHandler(r, w) {
 
     try {
 
-        let req = _.pick(r.body, ['motorcycle', 'user', 'value', 'description', 'type_maintenance', 'status'])
+        let req = _.pick(r.body, ['motorcycle', 'user', 'value', 'description', 'type_maintenance', 'status', 'url_photo'])
 
         let id = r.params.id
 
@@ -154,6 +165,10 @@ async function UpdateHandler(r, w) {
             req.photos = uploadResult
 
         }
+
+        let maintenance = await Model.findById(id)
+
+        await fileManager.DeleteFile(maintenance.photos[0])
 
         let maintenanceDB = await Model.findByIdAndUpdate(id, req, { new: true, runValidators: true })
 

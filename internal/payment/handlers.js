@@ -3,6 +3,7 @@ const _ = require('underscore')
 
 // Internal requieres
 const Model = require('./payments')
+const pcModel = require('../paymentCollection/paymentCollection')
 const cons = require('../../utils/constants')
 
 // IndexHandler ...
@@ -91,9 +92,11 @@ async function GetByIDHandler(r, w) {
 
     try {
 
-        const id = r.params.id
+        const { id } = r.params
 
         let paymentDB = await Model.findById(id)
+
+        let paymentCollections = await pcModel.find({"payment": id}).populate(["user", "motorcycle"])
 
         if (!paymentDB) {
             return w.status(404).json({
@@ -105,7 +108,10 @@ async function GetByIDHandler(r, w) {
 
         return w.status(200).json({
             error: false,
-            data: paymentDB,
+            data: {
+                paymentDB,
+                payments_collections: paymentCollections
+            },
             message: 'Get payment successfull'
         })
 
@@ -122,7 +128,7 @@ async function GetByIDHandler(r, w) {
 // UpdateHandler ...
 function UpdateHandler(r, w) {
 
-    let req = _.pick(r.body, ['title', 'status'])
+    let req = _.pick(r.body, ['title', 'payment_status'])
 
     let id = r.params.id
 

@@ -3,6 +3,8 @@ const _ = require('underscore')
 
 // Internal requieres
 const Model = require('./motorcycles')
+const pcModel = require('../paymentCollection/paymentCollection')
+const mnModel = require('../maintenances/maintenance')
 const cons = require('../../utils/constants')
 
 // IndexHandler ...
@@ -67,6 +69,7 @@ function StoreHandler(r, w) {
         license_plate: String(req.license_plate).toUpperCase(),
         price: req.price,
         date_of_purchase: req.date_of_purchase,
+        url_photo: req.url_photo,
     })
 
     console.log('LOG internal/motorcycles/handlers@StoreHandler', req);
@@ -98,6 +101,10 @@ async function GetByIDHandler(r, w) {
 
         let motorcycleDB = await Model.findById(id)
 
+        let paymentCollections = await pcModel.find({"motorcycle": id}).populate(["user"])
+
+        let maintenances = await mnModel.find({"motorcycle": id})
+
         if (!motorcycleDB) {
             return w.status(404).json({
                 error: true,
@@ -108,7 +115,11 @@ async function GetByIDHandler(r, w) {
 
         return w.status(200).json({
             error: false,
-            data: motorcycleDB,
+            data: {
+                motorcycleDB,
+                payments_collections: paymentCollections,
+                maintenances,
+            },
             message: 'Get motorcycle successfull'
         })
 
@@ -125,9 +136,11 @@ async function GetByIDHandler(r, w) {
 // UpdateHandler ...
 function UpdateHandler(r, w) {
 
-    let req = _.pick(r.body, ['brand', 'model', 'color', 'license_plate', 'price', 'date_of_purchase', 'status'])
+    let req = _.pick(r.body, ['brand', 'model', 'color', 'license_plate', 'price', 'date_of_purchase', 'status', 'url_photo'])
 
-    req.license_plate = String(req.license_plate).toUpperCase()
+    if(req.license_plate) {
+        req.license_plate = String(req.license_plate).toUpperCase()
+    }
 
     let id = r.params.id
 

@@ -10,6 +10,9 @@ const role = require('../middlewares/permisson')
 // Get /payments/collections route
 PaymentCollectionRoutes.get('/payments/collections', [auth, role(['ROOT', 'ADMINISTRATOR'])], handlers.IndexHandler)
 
+// Post /payments/collections/find/query
+PaymentCollectionRoutes.post('/payments/collections/find/query', [auth, role(['ROOT', 'ADMINISTRATOR'])], handlers.QueryHandler)
+
 // Get /payment/collection/:id route
 PaymentCollectionRoutes.get('/payment/collection/:id', [auth, role(['ROOT', 'ADMINISTRATOR'])], handlers.GetByIDHandler)
 

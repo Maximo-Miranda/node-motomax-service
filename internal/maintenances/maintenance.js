@@ -35,6 +35,10 @@ let maintenanceSchema = new Schema({
     photos: {
         type: [String]
     },
+    url_photo:{
+        type: String,
+        default: 'storage/no-image'
+    },
     status: {
         type: String,
         default: cons.status.values[0],

@@ -25,7 +25,7 @@ let paymentsCollectionsSchema = new Schema({
     },
     observation: {
         type: String,
-        required: [true, "The observation id is required"]
+        default: "N/A",
     },
     value: {
         type: Number,
